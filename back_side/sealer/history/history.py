@@ -1,4 +1,4 @@
-from sealer.cipher.cipher_key import Sealer
+from back_side.sealer.cipher.cipher_key import Sealer
 from sealpy.cipher import Enigma
 import json
 
