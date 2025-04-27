@@ -23,21 +23,30 @@ class MicrophoneInput(InputType):
         super().__init__(output_type, session)
 
     def start(self):
+        super().start()
+
         cvr = CustomVoiceRecognizer(self.session, self.output_type.output)
-        cvr.start_recognition()
-        return super().start()
+        try:
+            cvr.start_recognition()
+        except:
+            pass
 
 class TextInput(InputType):
     def __init__(self, output_type: OutputType, session: back_manage.CustomSession):
         super().__init__(output_type, session)
 
     def start(self):
-        while True:
-            text = input("Enter text: ")
-            if text.lower() == "exit":
-                break
-            response = self.session.send_message(text)
-            self.output_type.output(response)
+        try:
+            while True:
+                text = input("Enter text: ")
+                if text.lower() == "exit":
+                    break
+                response = self.session.send_message(text)
+                self.output_type.output(response)
+
+        except:
+            pass
+        
 
 
 class VoiceOutput(OutputType):

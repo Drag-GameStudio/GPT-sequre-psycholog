@@ -7,14 +7,28 @@ class History:
         "role": None,
         "content": None,
     }
-    def __init__(self, password):
-        self.private_key = Sealer(password).get_private_key()
+
+    DEFAULT_USER_STRUCTURE = {
+        "password": None,
+        "history": []
+    }
+
+    def __init__(self, login, password):
+        self.login = login
+        sealer = Sealer(password)
+        self.private_key = sealer.get_private_key()
+        self.server_key = sealer.get_server_type()
         self.enigma = Enigma(self.private_key)
         self.history = []
 
     def load_history(self):
         with open("history.json", "r") as file:
-            data = json.load(file)["history"]
+            data = json.load(file)
+
+        if data.get(self.login) is None:
+            data = []
+        else:
+            data = data.get(self.login)["history"]
 
         self.load_history_from_data(data)
 
@@ -40,14 +54,26 @@ class History:
 
     def save_history(self):
         history = self.cipher_history()
-        with open("history.json", "r") as file:
-            data = json.load(file)["history"]
 
-        for el in history:
-            data.append(el)
+
+        with open("history.json", "r") as file:
+            all_data = json.load(file)
+
+        if all_data.get(self.login) is None:
+            all_data[self.login] = self.DEFAULT_USER_STRUCTURE.copy()
+            all_data[self.login]["password"] = self.server_key
+            all_data[self.login]["history"] = history
+        
+        else:
+            data: list = all_data.get(self.login)["history"]
+
+            for el in history:
+                data.append(el)
+
+            all_data[self.login]["history"] = data
 
         with open("history.json", "w") as file:
-            json.dump({"history": data}, file, indent=4)
+            json.dump(all_data, file, indent=4)
 
     def add_history(self, role, content):
         new_data = self.DEFAULT_STRUCTURE.copy()
