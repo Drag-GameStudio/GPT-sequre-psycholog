@@ -10,7 +10,8 @@ class History:
 
     DEFAULT_USER_STRUCTURE = {
         "password": None,
-        "history": []
+        "history": [],
+        "session": 0
     }
 
     def __init__(self, login, password):
@@ -23,14 +24,18 @@ class History:
 
     def load_history(self):
         with open("history.json", "r") as file:
-            data = json.load(file)
+            data_j = json.load(file)
 
-        if data.get(self.login) is None:
+        if data_j.get(self.login) is None:
             data = []
+            session = 0
         else:
-            data = data.get(self.login)["history"]
+            data = data_j.get(self.login)["history"]
+            session = data_j.get(self.login)["session"]
 
         self.load_history_from_data(data)
+
+        return session
 
     def load_history_from_data(self, history_data):
         history = []
@@ -71,6 +76,7 @@ class History:
                 data.append(el)
 
             all_data[self.login]["history"] = data
+            all_data[self.login]["session"] += 1
 
         with open("history.json", "w") as file:
             json.dump(all_data, file, indent=4)

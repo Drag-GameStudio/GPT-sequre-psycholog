@@ -8,14 +8,13 @@ from abstacts import OutputType, InputType
 # mi.start()
 
 class Pcyholog:
-    def __init__(self, input_type, output_type, login, password, session_number):
+    def __init__(self, input_type, output_type, login, password):
         self.input_type: InputType = input_type
         self.output_type: OutputType = output_type
         self.password = password
-        self.session_number = session_number
 
-        self.session = back_manage.CustomSession(self.session_number, login, self.password)
-        self.controller = self.input_type(self.output_type, self.session)
+        self.session = back_manage.CustomSession(login, self.password)
+        self.controller = self.input_type(self.output_type(), self.session)
 
     def start_session(self):
         self.controller.start()
@@ -26,5 +25,5 @@ class Pcyholog:
         self.session.close_session()
 
 
-p = Pcyholog(TextInput, VoiceOutput(), "login", "password", 1)
+p = Pcyholog(TextInput, VoiceOutput, "login", "password")
 p.start_session()

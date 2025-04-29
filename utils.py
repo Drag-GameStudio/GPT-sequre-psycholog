@@ -24,7 +24,6 @@ class MicrophoneInput(InputType):
 
     def start(self):
         super().start()
-
         cvr = CustomVoiceRecognizer(self.session, self.output_type.output)
         try:
             cvr.start_recognition()
