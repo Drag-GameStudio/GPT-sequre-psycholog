@@ -29,11 +29,20 @@ class VoiceRecognizer:
         self.stream.start_stream()
 
         print("Говорите...")
+        buffer = []
         while True:
             data = self.stream.read(4000, exception_on_overflow=False)
             if self.rec.AcceptWaveform(data):
                 result = json.loads(self.rec.Result())
-                self.callback(result.get('text', ''))
+                buffer.append(result.get('text', ''))
+                print(buffer)
+                if len(buffer) >= 2:
+                    if buffer[-1]  == "":
+                        prompt = ""
+                        [prompt := prompt + " " + el for i, el in enumerate(buffer) if i < len(buffer)-2]
+                        buffer = []
+                        self.callback(prompt)
+                
 
 
     

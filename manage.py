@@ -25,5 +25,5 @@ class Pcyholog:
         self.session.close_session()
 
 
-p = Pcyholog(TextInput, VoiceOutput, "login", "password")
+p = Pcyholog(MicrophoneInput, VoiceOutput, "loginTest", "password")
 p.start_session()
