@@ -39,7 +39,7 @@ class VoiceRecognizer:
                 if len(buffer) >= 2:
                     if buffer[-1]  == "":
                         prompt = ""
-                        [prompt := prompt + " " + el for i, el in enumerate(buffer) if i < len(buffer)-2]
+                        [prompt := prompt + " " + el for i, el in enumerate(buffer)]
                         buffer = []
                         self.callback(prompt)
                 

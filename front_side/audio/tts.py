@@ -25,9 +25,18 @@ async def text_to_speech_async(text, voice="ru-RU-SvetlanaNeural", output_file="
     os.remove(output_file)
 
 def text_to_speech(text, voice="ru-RU-SvetlanaNeural", output_file="./front_side/audio/utils/output.mp3"):
-    asyncio.run(text_to_speech_async(text, voice, output_file))
+    text_buffer = 300
+    text_by_size = [text.split(".")[0]]
+    for el in text.split(".")[1:]:
 
-# print("Text-to-Speech Conversion")
-# while True:
-#     text = input("Enter the text you want to convert to speech: ")
-#     text_to_speech(text)
+        if len(text_by_size[-1]) > text_buffer:
+            text_by_size.append(el)
+            continue
+
+        text_by_size[-1] += ", " + el
+        
+
+
+    for tex in text_by_size:
+        asyncio.run(text_to_speech_async(tex, voice, output_file))
+
